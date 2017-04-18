@@ -1,18 +1,29 @@
-for i = 1:10
+for i = 1:24
 
  string = ['Testbilder/Test',num2str(i),'.jpg'] ;
 
  image = imread(string);
- bw= rgb2gray(image);
- bw = edge(bw, 'Canny',[0.01, 0.5]);
+ %bw= rgb2gray(image);
+ %bw = edge(bw, 'Canny',[0.01, 0.5]);
  %bw = personalized_edge_detection(image);
  
- [centers, radii] = imfindcircles(bw,[20,60]);
+ %[centers, radii] = imfindcircles(bw,[20,60]);
  
- figure
- imshow(image)
- h = viscircles(centers,radii);
+ %figure
+ %imshow(image)
+% h = viscircles(centers,radii);
  
- 
- %detect_signs(image)
+%version 1 vs. version 2 
+
+
+boxes = detect_signs(image);
+figure 
+imshow(image)
+plot_bounding_boxes(boxes,200)
+
+boxes = detect_signs_2(image);
+figure 
+imshow(image)
+plot_bounding_boxes(boxes,200
+)
 end

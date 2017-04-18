@@ -1,45 +1,20 @@
-function [ detected_image ] = detect_signs( image )
+function [ bounding_boxes ] = detect_signs( image )
+% this function computes the area in an image where we dectect colors
+% associated with a traffic sign (red,yellow,blue) AND filled edges. We
+% than return the bounding boxes of the so computed regions of interest
 
+% compute threshold image sensible to red,blue and yellow
+threshold_image = personalized_threshold(image); 
 
-threshold_image = personalized_threshold_2(image);
-%imshow(threshold_image)
+% compute the image where we detect the edges, widen them and fill the
+% holes
 edge_image = personalized_edge_detection(image);
-%figure
-%imshow(edge_image)
 
+% combine two binary image
 combined_image = min(threshold_image(:,:,1), edge_image(:,:,1));
 
-%figure 
-%imshow(combined_image)
-SegmentsMeasurements = personalized_segmentation(combined_image);
 
-
-numberOfSegments = size(SegmentsMeasurements, 1);
-
-figure
-hold on
-imshow(image)
-
-
-for k = 1 : numberOfSegments           % Loop through all segments.
-		% Find the bounding box of each blob.
-		thisSegmentsBoundingBox = SegmentsMeasurements(k).BoundingBox;  % Get list of pixels in current blob.
-		% Extract out this coin into it's own image.
-		subImage = imcrop(image, thisSegmentsBoundingBox);
-        
-        test = SegmentsMeasurements(k).BoundingBox(3) * SegmentsMeasurements(k).BoundingBox(4) ;
-        if test> 150
-            rectangle('Position',SegmentsMeasurements(k).BoundingBox,'EdgeColor','r', 'LineWidth', 2)
-        end
-        
-hold off
-end
-
-
-
-
-
-
+bounding_boxes = get_bounding_boxes(combined_image);
 
 end
 

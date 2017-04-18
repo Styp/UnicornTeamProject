@@ -51,7 +51,7 @@ boxPolygon = [1, 1;...                           % top-left
         1, size(boxImage, 1);...                 % bottom-left
         1, 1];                   % top-left again to close the polygon
     
-newBoxPolygon = transformPointsForward(tform, boxPolygon);
+newBoxPolgon = transformPointsForward(tform, boxPolygon);
 
 figure;
 imshow(sceneImage);
