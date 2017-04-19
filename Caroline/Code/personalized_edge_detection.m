@@ -6,7 +6,7 @@ image= original_image;
 % as edge detection works with graz images we transform the image to gray
 image = rgb2gray(image);
 
-%blurring the picture to reduce noise, we use the mean filter on a 5x5 
+%blurring the picture to reduce noise, we use the median filter on a 5x5 
 %neighborhood.
 image = medfilt2(image, [5,5]);
 image = medfilt2(image, [5,5]);
