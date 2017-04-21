@@ -2,43 +2,57 @@ function [ boundingBox, lable ] = detect_warning_sign (originalImage )
 %this functions detects the warning signs in an image with the help of the
 %hough transform
 
+%check threshold and the vote structure!!!
 
 %% possible parameters
-standard_size = [1000,1500];
+%standard_size = [1000,1500];
 
 %indicates the range of the size of the transformed image
-stretch = 0.5:0.1:1.5;
+stretch = 0.5:0.1:1.4;
 
 % indicates how many votes a pixel should have to indicate a warning sign
 threshold = 0;
-%% preprocessing 
-size_original_image = size(originalImage);
 
-resize = size_original_image(1)*0.125;
+%numbers of distinct viewed angles
+maxAngleBins = 9;
+
+%proprtional size of the sign compared to the original image
+prop = 1/5;
+
+% size of the averaging filter before getting the largest value
+av = 3;
+%% preprocessing 
 template = imread('standardPictures/warning_sign.png');
-template = imresize(template,[resize,resize]);
+%template = imread('standardPictures/triangle.png');
+size_original_image = size(originalImage);
+size_template = size(template);
+
+resize = prop * ( size_original_image(1)/ size_template(1));
+
+template = imresize(template,resize);
 
 % resize the picture to a standarized size 
 %image = imresize(originalImage, standard_size);
 image = originalImage;
 
-resize_x = size(1)/standard_size(1);
-resize_y = size(2)/standard_size(2);
+%resize_x = size(1)/standard_size(1);
+%resize_y = size(2)/standard_size(2);
 
 grayTemplate = rgb2gray(template);
 grayImage = rgb2gray(image);
-
-
+%grayImage = im2double(grayImage);
+%grayImage = imfill(grayImage,'holes');
+%grayImage = ordfilt2(grayImage,25,ones(5,5));
 
 %% edge detection 
 
 % Using Canny to find edges. Note that it converts the image into binary.
 edgeTemplate = edge(grayTemplate, 'canny',[0.005, 0.5]);
 
-edgeImage = edge(grayImage, 'canny',[0.005, 0.5]);
+edgeImage = edge(grayImage, 'canny',[0.005, 0.5],2);
 
-figure
-imshow(edgeTemplate);
+%figure
+%imshow(edgeTemplate);
 figure 
 imshow(edgeImage);
 
@@ -64,8 +78,7 @@ templateGradientMap = gradientDirection(edgeTemplate);
 %figure
 %imshow(templateGradientMap, []);
 
-%numbers of distinct viewed angles
-maxAngleBins = 10;
+
 
 % The maximum number of vectors per angle is the number of edge points
 % in the template is the maximal number of vectors
@@ -113,7 +126,7 @@ imageGradientMap = gradientDirection(edgeImage);
 %figure
 %imshow(imageGradientMap, []);
 
-imageSize = standard_size;
+imageSize = size_original_image;
 
 
 
@@ -151,7 +164,12 @@ yVote = round(stretch(layer)* houghTable(binAngle, vectorNum, 2)) + y(edgePoint)
 
 % make sure that we dont end outside the image
 if xVote > 0 && xVote < imageSize(1) && yVote > 0 && yVote < imageSize(2)
-houghSpace(xVote, yVote,layer) = houghSpace(xVote, yVote,layer) + 1;
+%houghSpace(xVote, yVote,layer) = houghSpace(xVote, yVote,layer) + 1;
+
+%try to give the same vote for small and big triangles
+houghSpace(xVote, yVote,layer) = houghSpace(xVote, yVote,layer) + ...
+    1/stretch(layer);
+
 % Incrementing the number of votes at the position the
 % vector points to.
 end
@@ -163,12 +181,13 @@ end
 
 % we run an 5x5 averaging filter over each layer
 %initialize filter 
-%h = ones(5,5,5) / 125;
-%houghSpace(:,:) = imfilter(houghSpace(:,:),h); 
+h = ones(av,av,av) / av^3;
+houghSpace(:,:) = imfilter(houghSpace(:,:),h); 
 
 %find location of the larges pixel 
 position=zeros(1,3);
 [C,I] = max(houghSpace(:));
+C
 
 if C > threshold 
     
@@ -192,6 +211,7 @@ boundingBox = [y, x,...
 lable = 'warning_sign';
 figure 
 imshow(image)
+hold on
 rectangle('Position',boundingBox,'EdgeColor','r', 'LineWidth', 2)
 else
 boundingBox = [];

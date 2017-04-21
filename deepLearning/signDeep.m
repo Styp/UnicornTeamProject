@@ -96,7 +96,7 @@ if doTraining
         'Verbose', true);
 
     % Train an R-CNN object detector. This will take several minutes.
-    rcnn = trainRCNNObjectDetector(imgDataset, baseNet, options, ...
+    rcnn = trainFastRCNNObjectDetector(imgDataset, baseNet, options, ...
     'NegativeOverlapRange', [0 0.3], 'PositiveOverlapRange',[0.5 1])
     save('signDetector.mat', 'rcnn', '-append')
 else

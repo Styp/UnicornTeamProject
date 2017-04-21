@@ -1,8 +1,14 @@
 
-template = imread('standardPictures/warning_sign.png');
-template = imresize(template,0.6);
-originalImage = imread('Testbilder/Test1-1.jpg');
-originalImage = imresize(originalImage,0.3);
+%template = imread('standardPictures/forms2.png');
+%template = imresize(template,0.5);
+
+template = imread('standardPictures/triangle.png');
+template = imrotate(template,180);
+template = imresize(template,0.4);
+
+%originalImage = imread('standardPictures/forms.png');
+%originalImage = imresize(originalImage,0.3);
+originalImage = imread('testImageGiveWay/Test7.jpg');
 %originalImage = imresize(originalImage,0.75);
 %image = originalImage;
 % Converting to grayscale.
@@ -175,6 +181,7 @@ boundingBox = [y,x,width_y,width_x];
 
 figure 
 imshow(originalImage)
+hold on 
 rectangle('Position',boundingBox,'EdgeColor','r', 'LineWidth', 2)
 
 

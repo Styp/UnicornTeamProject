@@ -14,11 +14,12 @@ function [trainImage, trainLabel] = loadTrainingImageBig(path)
             currentFolder = allFilesInFolder(i);
             if (currentFolder.isdir == 0 && contains(currentFolder.name, '.ppm'))
                 name = strcat(folderPath, '/', allFilesInFolder(i).name);
-                resizeImage = imread(name);
-                outputImage = imresize(resizeImage,[32,32]);
-                trainImage(:,:,:,j) = outputImage;
-                labelPointer(j) = real_folder;
-                j = j+1;
+                [x1,y1] = size(imread(name));
+                if(x1 >= 16 && x2 >= 16)
+                    trainImage(:,:,:,j) = outputImage;
+                    labelPointer(j) = real_folder;
+                    j = j+1;
+                end
             end
         end 
     end

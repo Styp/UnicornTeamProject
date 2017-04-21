@@ -1,4 +1,3 @@
-
 function [trainImage, trainLabel] = loadTrainingImage(path)
 
     % load data

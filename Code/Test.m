@@ -1,8 +1,15 @@
-for i = 1:24
+for i = 1:7
 
- string = ['Testbilder/Test',num2str(i),'.jpg'] ;
+ string = ['testImageGiveWay/Test',num2str(i),'.jpg'] ;
 
  image = imread(string);
+ 
+ im_size = size(image);
+  
+ %resize = 400/im_size(1);
+ 
+ %image = imresize(image,resize);
+ 
  %bw= rgb2gray(image);
  %bw = edge(bw, 'Canny',[0.01, 0.5]);
  %bw = personalized_edge_detection(image);
@@ -16,11 +23,11 @@ for i = 1:24
 %version 1 vs. version 2 
 
 
-[boxes,~] = detect_warning_sign(image);
+[boxes,~] = detect_giveway_sign_2(image);
 
-%if isempty(boxes) == false
-%figure 
-%imshow(image)
-%plot_bounding_boxes(boxes,200)
-%end
+if isempty(boxes) == false
+figure 
+imshow(image)
+plot_bounding_boxes(boxes,200)
+end
 end

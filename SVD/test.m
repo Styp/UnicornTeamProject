@@ -8,13 +8,13 @@ imshow(grayImg)
 
 %%% compression
 [TU,TS,TV] = svd(single(grayImg));
-SV = diag(S)
+SV = diag(TS);
 s = size(SV);
 
 rank = s(1);
 
-U_compressed = U(:, 1:45);
-V_compressed = V(1:45, :);
+U_compressed = TU(:, 1:45);
+V_compressed = TV(1:45, :);
 
 vector = 1:45
 
@@ -24,11 +24,11 @@ for k = 2: s(1)
 end
 
 
-%%% decompression
+%% decompressionat
 v = 2
 
 % find the rank used for each block
-rr = 1;
+rr = 5;
 k = s(1)-1;
 while (k >=1) 
         if ( (TCS(k) <= v) & (TCS(k+1) >= v))
