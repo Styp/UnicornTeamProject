@@ -1,0 +1,12 @@
+baseDir = '/opt/dataset/FullIJCNN2013';
+
+gtFilePath = strcat(baseDir, '/gt.txt');
+gtFile = readtable(gtFilePath);
+
+
+imgDataset = loadImageData(baseDir, gtFile)
+
+for k=1:length(1,1)
+    
+end
+
