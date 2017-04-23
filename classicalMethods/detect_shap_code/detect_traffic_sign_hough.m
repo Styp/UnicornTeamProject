@@ -27,7 +27,7 @@ function [ final_boundingBox, label, method ] = detect_traffic_sign_hough (origi
 standard_size_x = 600;
 
 %indicates the range of the size of form we are searching for in the image
-stretch = 0.5:0.05:1.5;
+stretch = 0.5:0.05:2;
 
 %numbers of distinct viewed angles
 maxAngleBins = 30; 		
@@ -45,7 +45,7 @@ av = 3;
 
 % indicates how much results we want to be returned if they are greater
 % than the threshold 
-numReturns = 1;
+numReturns = 2;
 
 %% decide which sign we are searching for 
 % load the template and resize it to the given proportion of the input
@@ -60,9 +60,9 @@ if strcmp(sign,'warning')
 elseif strcmp(sign, 'giveway')
     template = imread('triangle.png');
     template = imrotate(template,180);
-    method_label = 'warning';
+    method_label = 'triangle';
     method_index = 3;
-    threshold = 85;
+    threshold = 95;
     
 elseif strcmp(sign,'stop')
     template = imread('stop.png');
@@ -74,7 +74,7 @@ elseif strcmp(sign, 'priority road')
     template = imread('priority_road.png');
     method_label = 'priority_road';
     method_index = 3;
-    threshold = 95;
+    threshold = 135;
 
 else
     error('this is not a valid road sign, please use one of the following: warning, giveway, stop or priority road') 
@@ -258,7 +258,7 @@ pos=zeros(1,3);
 
 
 while C > threshold && returns < numReturns
-   %C 
+   C 
 [pos(1), pos(2),pos(3)] = ind2sub(size(houghSpace),I);
 
 width_x =  floor(stretch(pos(3)) * sizeTemplate(1));
@@ -292,7 +292,7 @@ boundingBox = [boundingBox; ...
 returns = returns +1;
 
 % set the label for this category 
-label = categorical();
+
 label(returns,1) = method_label;
 method = [method;
     method_index];
